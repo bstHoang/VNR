@@ -25,18 +25,48 @@
     </style>
 </head>
 <body class="flex items-center justify-center h-screen m-0">
-    <canvas id="game-canvas"></canvas>
-    <div class="absolute top-0 left-0 p-6 md:p-8 text-white w-full">
-        <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">Hồ Chí Minh</h1>
-    </div>
-    <div class="absolute top-6 right-6 md:top-8 md:right-8 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20">
-        <p class="text-center text-xs mb-2 font-bold">XEM THÊM</p>
-        <div id="target-shape" class="w-20 h-20 md:w-24 md:h-24 bg-white/5 rounded-lg flex items-center justify-center cursor-pointer hover:bg-white/10 transition">
-            <img src="HoChiMinh.jpg" alt="Hình mẫu" class="w-full h-full object-contain">
+
+    <button id="open-menu-btn" class="absolute top-6 left-6 md:top-8 md:left-8 z-30 p-3 bg-black/50 rounded-lg backdrop-blur-sm text-white hover:bg-black/70 transition">
+        <div class="w-6 h-0.5 bg-white mb-1.5"></div>
+        <div class="w-6 h-0.5 bg-white mb-1.5"></div>
+        <div class="w-6 h-0.5 bg-white"></div>
+    </button>
+    <div id="character-menu" 
+         class="absolute top-0 left-0 h-full bg-black/70 backdrop-blur-md p-4 shadow-lg z-40
+                transform -translate-x-full 
+                transition-transform duration-300 ease-in-out
+                flex flex-col space-y-4 w-auto">
+        
+        <button id="close-menu-btn" class="self-end text-white hover:text-gray-300 mb-2 p-2 rounded-full hover:bg-white/10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        
+        <p class="text-sm font-bold text-center mb-2">CHỌN NHÂN VẬT</p>
+
+        <div class="cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
+            <img src="https://placehold.co/64x64/f9f9f9/333?text=NV1" alt="Nhân vật 1" class="w-16 h-16 rounded-full object-cover mx-auto">
+            <p class="text-xs mt-1">Võ Nguyên Giáp</p>
+        </div>
+        
+        <div class="cursor-pointer p-2 rounded-lg bg-white/20 transition text-center border-2 border-blue-400">
+            <img src="HoChiMinh.jpg" alt="Hồ Chí Minh" class="w-16 h-16 rounded-full object-cover mx-auto">
+            <p class="text-xs mt-1 font-bold">Hồ Chí Minh</p>
+        </div>
+
+        <div class="cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
+            <img src="https://placehold.co/64x64/f9f9f9/333?text=NV2" alt="Nhân vật 3" class="w-16 h-16 rounded-full object-cover mx-auto">
+            <p class="text-xs mt-1">Lê Duẩn</p>
         </div>
     </div>
-    <div id="detail-panel" class="absolute top-0 right-0 h-full w-1/3 md:w-1/4 bg-black/80 p-6 overflow-y-auto hidden flex flex-col items-center text-white backdrop-blur-md border-l border-white/20">
-        <button id="close-panel-btn" class="self-end text-white hover:text-gray-300 mb-4">Đóng</button>
+    <canvas id="game-canvas"></canvas>
+    
+    <div class="absolute top-0 left-0 p-6 md:p-8 text-white w-full z-10 text-center">
+        <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">Hồ Chí Minh</h1>
+    </div>
+    
+    <div id="detail-panel" class="absolute top-0 right-0 h-full w-1/3 md:w-1/4 bg-black/80 p-6 overflow-y-auto flex flex-col items-center text-white backdrop-blur-md border-l border-white/20 z-30">
         <img src="HoChiMinh.jpg" alt="Hình mẫu" class="w-full h-auto object-contain mb-4 rounded-lg">
         <p class="text-sm text-center">
             Hồ Chí Minh (1890-1969) là một nhà cách mạng vĩ đại, lãnh tụ của dân tộc Việt Nam. Ông đã lãnh đạo nhân dân Việt Nam giành độc lập từ thực dân Pháp và thành lập nước Việt Nam Dân chủ Cộng hòa. Với tư tưởng Hồ Chí Minh, ông nhấn mạnh vào độc lập dân tộc, đoàn kết và xây dựng một xã hội công bằng. Di sản của ông vẫn là nguồn cảm hứng cho nhiều thế hệ.
@@ -53,19 +83,20 @@
 
     <script type="module">
         import * as THREE from 'three';
+        // ... (TOÀN BỘ CODE THREE.JS GIỮ NGUYÊN) ...
         // Configuration
         const imageUrl = '1.jpg';
-        const DENSITY = 0.7; // Mật độ hạt
+        const DENSITY = 3; // Mật độ hạt
         const BRIGHTNESS_THRESHOLD = 0.4; // Ngưỡng sáng (có thể điều chỉnh nếu shadow chưa khớp)
         const DEPTH_RANGE = 80; // Phạm vi độ sâu (Z)
         const PARTICLE_RADIUS = 1.2; // Bán kính quả cầu
-        const SCALE_XY = 1; // Hệ số thu nhỏ trục X và Y
+        const SCALE_XY = 2; // Hệ số thu nhỏ trục X và Y
         // Scene setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000); // Tăng tầm nhìn xa của camera
         
         // THAY ĐỔI 1: Di chuyển camera ra xa hơn nữa
-        camera.position.set(-500, 216, 540); // Vị trí cũ: (-576, 144, 360)
+        camera.position.set(-864, 216, 540); // Vị trí cũ: (-576, 144, 360)
         
         camera.lookAt(0, 0, 0);
         const canvas = document.getElementById('game-canvas');
@@ -83,8 +114,8 @@
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
         directionalLight.position.set(50, 100, 200);
         directionalLight.castShadow = true;
-        directionalLight.shadow.mapSize.width = 2048;
-        directionalLight.shadow.mapSize.height = 2048;
+        directionalLight.shadow.mapSize.width = 4096;
+        directionalLight.shadow.mapSize.height = 4096;
         
         // THAY ĐỔI 2: Điều chỉnh vùng shadow của đèn để khớp với plane mới (2700x1800)
         const shadowBoundsX = 1350; // 2700 / 2 (Cũ: 900)
@@ -104,7 +135,7 @@
         // THAY ĐỔI 3: Tăng kích thước của Plane (nền)
         // Tải texture ảnh nền
         const bgTextureLoader = new THREE.TextureLoader();
-        const backgroundTexture = bgTextureLoader.load('Đảng Cộng Sản Việt Nam.png'); // Sử dụng ảnh bạn cung cấp
+        const backgroundTexture = bgTextureLoader.load('Đảng Cộng sản Việt Nam.png'); // Sử dụng ảnh bạn cung cấp
 
         // Tăng kích thước plane theo tỷ lệ 3:2 của ảnh
         const planeGeometry = new THREE.PlaneGeometry(2700, 1800); // Kích thước cũ: 1800, 1200
@@ -116,7 +147,7 @@
         });
         
         const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-        plane.position.z = -250; // Giữ nguyên vị trí z
+        plane.position.z = -500; // Giữ nguyên vị trí z
         plane.receiveShadow = true;
         scene.add(plane);
 
@@ -170,8 +201,8 @@
                 const pixelData = validPixels[i];
                 const i3 = i * 3;
                 // Vị trí X, Y từ ảnh
-                const posX = (pixelData.x - imageWidth / 2);
-                const posY = -(pixelData.y - imageHeight / 2);
+                const posX = (pixelData.x - imageWidth / 2) * SCALE_XY;
+                const posY = -(pixelData.y - imageHeight / 2) * SCALE_XY;
                 // Vị trí Z: phân bố dựa trên độ sáng
                 // Giữ nguyên depthFactor = 1 - brightness (phần tối có depth lớn hơn)
                 // Nếu muốn đảo, đổi thành depthFactor = pixelData.brightness;
@@ -244,18 +275,42 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
         window.addEventListener('resize', handleResize);
-        // Xử lý click vào target-shape và panel
-        const targetShape = document.getElementById('target-shape');
+
+        // --- START: THAY ĐỔI JAVASCRIPT ---
+
+        // Lấy các phần tử mới cho menu bên trái
+        const openMenuBtn = document.getElementById('open-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const characterMenu = document.getElementById('character-menu');
+        
         const detailPanel = document.getElementById('detail-panel');
         const closePanelBtn = document.getElementById('close-panel-btn');
-        targetShape.addEventListener('click', () => {
-            detailPanel.classList.remove('hidden');
-            detailPanel.classList.add('flex');
+
+        // Gán sự kiện click cho nút mở menu
+        openMenuBtn.addEventListener('click', () => {
+            characterMenu.classList.remove('-translate-x-full'); // Hiện menu
         });
+
+        // Gán sự kiện click cho nút đóng menu
+        closeMenuBtn.addEventListener('click', () => {
+            characterMenu.classList.add('-translate-x-full'); // Ẩn menu
+        });
+
+        // Xóa bỏ sự kiện click cho targetShape (vì nó đã bị xóa)
+        // const targetShape = document.getElementById('target-shape');
+        // targetShape.addEventListener('click', () => {
+        //     detailPanel.classList.remove('hidden');
+        //     detailPanel.classList.add('flex');
+        // });
+
+        // Giữ lại sự kiện đóng cho panel chi tiết
         closePanelBtn.addEventListener('click', () => {
             detailPanel.classList.add('hidden');
+    
             detailPanel.classList.remove('flex');
         });
+
+        // --- END: THAY ĐỔI JAVASCRIPT ---
     </script>
 </body>
 </html>
