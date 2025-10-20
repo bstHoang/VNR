@@ -59,13 +59,13 @@
         const BRIGHTNESS_THRESHOLD = 0.4; // Ngưỡng sáng (có thể điều chỉnh nếu shadow chưa khớp)
         const DEPTH_RANGE = 80; // Phạm vi độ sâu (Z)
         const PARTICLE_RADIUS = 1.2; // Bán kính quả cầu
-        const SCALE_XY = 0.005; // Hệ số thu nhỏ trục X và Y
+        const SCALE_XY = 1; // Hệ số thu nhỏ trục X và Y
         // Scene setup
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000); // Tăng tầm nhìn xa của camera
         
-        // THAY ĐỔI 1: Di chuyển camera ra xa hơn để nhìn bao quát
-        camera.position.set(-576, 144, 360); // Vị trí cũ: (-320, 80, 200)
+        // THAY ĐỔI 1: Di chuyển camera ra xa hơn nữa
+        camera.position.set(-500, 216, 540); // Vị trí cũ: (-576, 144, 360)
         
         camera.lookAt(0, 0, 0);
         const canvas = document.getElementById('game-canvas');
@@ -86,9 +86,9 @@
         directionalLight.shadow.mapSize.width = 2048;
         directionalLight.shadow.mapSize.height = 2048;
         
-        // THAY ĐỔI 2: Điều chỉnh vùng shadow của đèn để khớp với plane mới (1800x1200)
-        const shadowBoundsX = 900; // 1800 / 2
-        const shadowBoundsY = 600; // 1200 / 2
+        // THAY ĐỔI 2: Điều chỉnh vùng shadow của đèn để khớp với plane mới (2700x1800)
+        const shadowBoundsX = 1350; // 2700 / 2 (Cũ: 900)
+        const shadowBoundsY = 900;  // 1800 / 2 (Cũ: 600)
         directionalLight.shadow.camera.left = -shadowBoundsX;
         directionalLight.shadow.camera.right = shadowBoundsX;
         directionalLight.shadow.camera.top = shadowBoundsY;
@@ -101,17 +101,16 @@
         directionalLight.shadow.bias = -0.0001;
         scene.add(directionalLight);
 
-        // THAY ĐỔI 3: Thay nền trắng bằng ảnh nền
+        // THAY ĐỔI 3: Tăng kích thước của Plane (nền)
         // Tải texture ảnh nền
         const bgTextureLoader = new THREE.TextureLoader();
-        const backgroundTexture = bgTextureLoader.load('Đảng Cộng sản Việt Nam.png'); // Sử dụng ảnh bạn cung cấp
+        const backgroundTexture = bgTextureLoader.load('Đảng Cộng Sản Việt Nam.png'); // Sử dụng ảnh bạn cung cấp
 
-        // Điều chỉnh kích thước plane theo tỷ lệ 3:2 của ảnh
-        const planeGeometry = new THREE.PlaneGeometry(1800, 1200); // Kích thước cũ: 1200, 1200
+        // Tăng kích thước plane theo tỷ lệ 3:2 của ảnh
+        const planeGeometry = new THREE.PlaneGeometry(2700, 1800); // Kích thước cũ: 1800, 1200
         
         // Sử dụng 'map' để áp ảnh làm vật liệu, thay vì 'color'
         const planeMaterial = new THREE.MeshStandardMaterial({ 
-            // color: 0xffffff, // Đã xóa màu trắng
             map: backgroundTexture, // Thêm ảnh nền
             roughness: 0.8
         });
