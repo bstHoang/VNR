@@ -64,114 +64,8 @@
 
 <body class="flex items-center justify-center h-screen m-0">
 
-    <div id="character-menu" 
-     class="absolute top-0 left-0 h-full bg-black/70 backdrop-blur-md p-4 shadow-lg z-40
-            transition-transform duration-300 ease-in-out
-            flex flex-col w-auto"> 
-    <p class="text-sm font-bold text-center mb-2">CHỌN NHÂN VẬT</p>
+    <div id="menu-placeholder" class="absolute top-0 left-0 h-full bg-black/70 backdrop-blur-md p-4 shadow-lg z-40 transition-transform duration-300 ease-in-out flex flex-col w-auto"></div>
 
-    <div class="flex-1 overflow-y-auto space-y-4 hide-scrollbar">
-
-        <a href="TrinhDinhCuu.html">
-            <div id="item-TrinhDinhCuu" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="TrinhDinhCuu.jpg" alt="Trịnh Đình Cửu" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1 font-bold">Trịnh Đình Cửu</p>
-            </div>
-        </a>
-
-        <a href="TranPhu.html">
-            <div id="item-TranPhu" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="TranPhu.gif" alt="Trần Phú" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Trần Phú</p>
-            </div>
-        </a>
-
-        <a href="LeHongPhong.html">
-            <div id="item-LeHongPhong" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="LeHongPhong.gif" alt="Lê Hồng Phong" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Lê Hồng Phong</p>
-            </div>
-        </a>
-
-        <a href="HaHuyTap.html">
-            <div id="item-HaHuyTap" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="HaHuyTap.png" alt="Hà Huy Tập" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Hà Huy Tập</p>
-            </div>
-        </a>
-
-        <a href="NguyenVanCu.html">
-            <div id="item-NguyenVanCu" class="cursor-pointer p-2 rounded-lg bg-white/20 transition text-center border-2 border-blue-400">
-                <img src="NguyenVanCu.gif" alt="Nguyễn Văn Cừ" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1 font-bold">Nguyễn Văn Cừ</p>
-            </div>
-        </a>
-
-        <a href="TruongChinh.html">
-            <div id="item-TruongChinh" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="TruongChinh.jpg" alt="Trường Chinh" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Trường Chinh</p>
-            </div>
-        </a>
-
-        <a href="HoChiMinh.html">
-            <div id="item-HoChiMinh" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="HoChiMinh.jpg" alt="Hồ Chí Minh" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Hồ Chí Minh</p>
-            </div>
-        </a>
-
-        <a href="LeDuan.html">
-            <div id="item-LeDuan" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="LeDuan.webp" alt="Lê Duẩn" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Lê Duẩn</p>
-            </div>
-        </a>
-
-        <a href="NguyenVanLinh.html">
-            <div id="item-NguyenVanLinh" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="NguyenVanLinh.jpg" alt="Nguyễn Văn Linh" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Nguyễn Văn Linh</p>
-            </div>
-        </a>
-
-        <a href="DoMuoi.html">
-            <div id="item-DoMuoi" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="DoMuoi.jfif" alt="Đỗ Mười" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Đỗ Mười</p>
-            </div>
-        </a>
-
-        <a href="LeKhaPhieu.html">
-            <div id="item-LeKhaPhieu" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="LeKhaPhieu.jpg" alt="Lê Khả Phiêu" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Lê Khả Phiêu</p>
-            </div>
-        </a>
-
-        <a href="NongDucManh.html">
-            <div id="item-NongDucManh" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="NongDucManh.jpg" alt="Nông Đức Mạnh" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Nông Đức Mạnh</p>
-            </div>
-        </a>
-
-        <a href="NguyenPhuTrong.html">
-            <div id="item-NguyenPhuTrong" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="NguyenPhuTrong.jpg" alt="Nguyễn Phú Trọng" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Nguyễn Phú Trọng</p>
-            </div>
-        </a>
-
-        <a href="ToLam.html">
-            <div id="item-ToLam" class="character-item cursor-pointer p-2 rounded-lg hover:bg-white/20 transition text-center opacity-60 hover:opacity-100">
-                <img src="ToLam.webp" alt="Tô Lâm" class="w-16 h-16 rounded-full object-cover mx-auto">
-                <p class="text-xs mt-1">Tô Lâm</p>
-            </div>
-        </a>
-
-    </div>
-</div>
 
 
         </div> </div>
@@ -532,7 +426,8 @@ window.addEventListener('load', () => {  // Chờ toàn bộ page load (images, 
     }
 });
 </script>
-
+ <!-- Thêm script menu.js ở đây (giả sử file menu.js nằm cùng thư mục) -->
+    <script src="menu.js"></script>
 </body>
 
 </html>
