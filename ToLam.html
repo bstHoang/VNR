@@ -3,428 +3,298 @@
 <html lang="vi">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Tô Lâm</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     <style>
-
         body {
-
             background-color: #1a1a1a;
-
             color: #f0f0f0;
-
             font-family: 'Inter', sans-serif;
-
             overflow: hidden;
-
         }
-
         #game-canvas {
-
             display: block;
-
             width: 100vw;
-
             height: 100vh;
-
             cursor: grab;
-
         }
-
         #game-canvas:active {
-
             cursor: grabbing;
-
         }
-
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-
         .hide-scrollbar {
             /* Ẩn thanh cuộn cho Firefox */
             scrollbar-width: none;
             /* Ẩn thanh cuộn cho IE/Edge */
             -ms-overflow-style: none;
         }
-        
         .hide-scrollbar::-webkit-scrollbar {
             /* Ẩn thanh cuộn cho Chrome, Safari và Edge mới */
             display: none;
         }
-
     </style>
-
 </head>
 
 <body class="flex items-center justify-center h-screen m-0">
 
     <!-- Placeholder thay thế toàn bộ menu cũ (JS sẽ inject nội dung menu vào đây) -->
-    <div id="menu-placeholder" class="absolute top-0 left-0 h-full bg-black/70 backdrop-blur-md p-4 shadow-lg z-40 transition-transform duration-300 ease-in-out flex flex-col w-auto"></div>
+    <div id="character-menu" class="absolute top-0 left-0 h-full bg-black/70 backdrop-blur-md p-4 shadow-lg z-40 transition-transform duration-300 ease-in-out flex flex-col w-auto"></div>
 
     <canvas id="game-canvas"></canvas>
 
-    
-
     <div class="absolute top-0 left-0 p-6 md:p-8 text-white w-full z-10 text-center">
-
         <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">Tô Lâm</h1>
-
     </div>
-
-    
 
     <div id="detail-panel" class="hide-scrollbar absolute top-0 right-0 h-full w-1/3 md:w-1/4 bg-black/80 p-6 overflow-y-auto flex flex-col items-center text-white backdrop-blur-md border-l border-white/20 z-30">
-
         <img src="ToLam.webp" alt="Hình mẫu" class="w-full h-auto object-contain mb-4 rounded-lg">
-
         <p class="text-sm text-center">
-
           Tô Lâm (1957–) đang có một giai đoạn đảm nhận cương vị lãnh đạo cao nhất trong một bối cảnh đặc biệt của Đảng và đất nước. Cụ thể, ông được Ban Chấp hành Trung ương Đảng khóa XIII bầu làm Tổng Bí thư tại Hội nghị Trung ương 9 (tháng 8 năm 2024), sau khi Tổng Bí thư Nguyễn Phú Trọng từ trần. Đây là thời điểm then chốt khi toàn Đảng đang quyết liệt tiếp tục cuộc đấu tranh phòng, chống tham nhũng, tiêu cực và phải đối mặt với những biến động phức tạp của tình hình thế giới, cũng như chuẩn bị bước vào giai đoạn cuối của nhiệm kỳ. Với vai trò lãnh đạo cao nhất, ông đã thể hiện sự kiên định, quyết tâm kế thừa và đẩy mạnh sự nghiệp xây dựng, chỉnh đốn Đảng, củng cố khối đại đoàn kết toàn dân tộc. Đồng thời, ông tập trung chỉ đạo thực hiện thắng lợi các mục tiêu kinh tế - xã hội đã đề ra và tích cực chuẩn bị các nền tảng chiến lược, đặc biệt là công tác nhân sự và văn kiện, cho Đại hội Đảng toàn quốc lần thứ XIV.
         </p>
-
     </div>
 
-
-
     <script type="importmap">
-
         {
-
             "imports": {
-
                 "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js"
-
             }
-
         }
-
     </script>
 
-
-
     <script type="module">
-    import * as THREE from 'three';
-    // ... (Code Three.js cũ) ...
-
-    // Configuration
-    const imageUrl = '14.jpg';
-    const DENSITY = 3;
-    const BRIGHTNESS_THRESHOLD = 0.4;
-    const DEPTH_RANGE = 80;
-    const PARTICLE_RADIUS = 1.2;
-    
-    // --- THAY ĐỔI THEO YÊU CẦU 2: Làm bóng to hơn ---
-    // Tăng hệ số scale vật thể (và bóng) lên
-    const SCALE_XY = 3; // Kích thước cũ: 2
-
-    // Scene setup
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
-    camera.position.set(-864, 216, 540);
-    camera.lookAt(0, 0, 0);
-    const canvas = document.getElementById('game-canvas');
-    const renderer = new THREE.WebGLRenderer({ 
-        canvas: canvas,
-        antialias: true 
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x2a2a2a);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFShadowMap;
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
-    directionalLight.position.set(50, 100, 200);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 4096;
-    directionalLight.shadow.mapSize.height = 4096;
-    
-    // --- THAY ĐỔI THEO YÊU CẦU 2: Mở rộng vùng camera của bóng ---
-    // Vì SCALE_XY tăng từ 2 lên 3 (tăng 1.5 lần),
-    // chúng ta cũng cần tăng vùng chứa bóng lên 1.5 lần
-    const shadowBoundsX = 2025; // Kích thước cũ: 1350 (1350 * 1.5)
-    const shadowBoundsY = 1350;  // Kích thước cũ: 900 (900 * 1.5)
-
-    directionalLight.shadow.camera.left = -shadowBoundsX;
-    directionalLight.shadow.camera.right = shadowBoundsX;
-    directionalLight.shadow.camera.top = shadowBoundsY;
-    directionalLight.shadow.camera.bottom = -shadowBoundsY;
-
-    directionalLight.shadow.camera.far = 1000;
-    directionalLight.shadow.camera.near = 0.1;
-    directionalLight.shadow.bias = -0.0001;
-    scene.add(directionalLight);
-
-    // Plane (nền)
-    const bgTextureLoader = new THREE.TextureLoader();
-    const backgroundTexture = bgTextureLoader.load('Đảng Cộng Sản Việt Nam.png');
-    const planeGeometry = new THREE.PlaneGeometry(2700, 1800);
-    const planeMaterial = new THREE.MeshStandardMaterial({ 
-        map: backgroundTexture,
-        roughness: 0.8
-    });
-    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-    plane.position.z = -500;
-    plane.receiveShadow = true;
-    scene.add(plane);
-
-    // Variables
-    let particleCloud, particleCount, mainObjectGroup;
-    let isDragging = false;
-    const previousMousePosition = { x: 0, y: 0 };
-    const rotationSpeed = 0.005;
-
-    // Tạo Group chính
-    mainObjectGroup = new THREE.Group();
-    scene.add(mainObjectGroup);
-
-    // --- THAY ĐỔI THEO YÊU CẦU 1: Làm ngôi sao nhỏ và đẹp hơn ---
-    const starShape = new THREE.Shape();
-    const outerRadius = 150; // Kích thước cũ: 300
-    const innerRadius = 75;  // Kích thước cũ: 150
-    
-    starShape.moveTo(outerRadius, 0);
-    for (let i = 1; i <= 5; i++) {
-        let innerAngle = (i * 2 * Math.PI / 5) - (Math.PI / 5);
-        starShape.lineTo(innerRadius * Math.cos(innerAngle), innerRadius * Math.sin(innerAngle));
-        let outerAngle = i * 2 * Math.PI / 5;
-        starShape.lineTo(outerRadius * Math.cos(outerAngle), outerRadius * Math.sin(outerAngle));
-    }
-    
-    // Thêm "bevel" (cạnh vát) để ngôi sao đẹp hơn
-    const extrudeSettings = { 
-        depth: 20, // Cho mỏng lại, Kích thước cũ: 50
-        bevelEnabled: true,
-        bevelThickness: 5,
-        bevelSize: 4,
-        bevelSegments: 2
-    }; 
-    const starGeometry = new THREE.ExtrudeGeometry(starShape, extrudeSettings);
-    starGeometry.center(); 
-    
-    const starMaterial = new THREE.MeshStandardMaterial({
-        color: 0xFFFF00, 
-        roughness: 0.4,
-        metalness: 0.2
-    });
-    
-    const starMesh = new THREE.Mesh(starGeometry, starMaterial);
-    starMesh.castShadow = false;
-    starMesh.receiveShadow = false; 
-    mainObjectGroup.add(starMesh);
-    
-    // Load ảnh và tạo đám mây hạt (vật thể tàng hình)
-    const loader = new THREE.TextureLoader();
-    loader.load(imageUrl, (texture) => {
-        const image = texture.image;
-        const imageWidth = image.width;
-        const imageHeight = image.height;
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d', { willReadFrequently: true });
-        canvas.width = imageWidth;
-        canvas.height = imageHeight;
-        context.drawImage(image, 0, 0);
-        const imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
-        const validPixels = [];
-        for (let i = 0; i < imageData.length; i += 4) {
-            const brightness = (imageData[i] + imageData[i+1] + imageData[i+2]) / (255 * 3);
-            if (brightness < BRIGHTNESS_THRESHOLD && Math.random() < DENSITY) {
-                validPixels.push({
-                    x: (i / 4) % imageWidth,
-                    y: Math.floor((i / 4) / imageWidth),
-                    color: { r: imageData[i]/255, g: imageData[i+1]/255, b: imageData[i+2]/255 },
-                    brightness: brightness
-                });
-            }
-        }
-        particleCount = validPixels.length;
-        console.log(`Tạo đám mây với ${particleCount} hạt`);
+        import * as THREE from 'three';
+        // ... (Code Three.js cũ giữ nguyên, từ // Configuration đến window.addEventListener('resize', handleResize); ) ...
+        // Configuration
+        const imageUrl = '14.jpg';
+        const DENSITY = 3;
+        const BRIGHTNESS_THRESHOLD = 0.4;
+        const DEPTH_RANGE = 80;
+        const PARTICLE_RADIUS = 1.2;
         
-        const sphereGeometry = new THREE.SphereGeometry(PARTICLE_RADIUS, 8, 8);
-        const material = new THREE.MeshStandardMaterial({
-            vertexColors: true,
-            roughness: 0.5,
-            metalness: 0.1
+        // --- THAY ĐỔI THEO YÊU CẦU 2: Làm bóng to hơn ---
+        // Tăng hệ số scale vật thể (và bóng) lên
+        const SCALE_XY = 3; // Kích thước cũ: 2
+
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera.position.set(-864, 216, 540);
+        camera.lookAt(0, 0, 0);
+        const canvas = document.getElementById('game-canvas');
+        const renderer = new THREE.WebGLRenderer({ 
+            canvas: canvas,
+            antialias: true 
         });
-        
-        // Làm vật liệu tàng hình (vẫn đổ bóng)
-        material.colorWrite = false;
-
-        particleCloud = new THREE.InstancedMesh(sphereGeometry, material, particleCount);
-        const dummy = new THREE.Object3D();
-        const colors = new Float32Array(particleCount * 3);
-        for (let i = 0; i < particleCount; i++) {
-            const pixelData = validPixels[i];
-            
-            // Dòng này sử dụng hằng số SCALE_XY (đã tăng lên 3)
-            const posX = (pixelData.x - imageWidth / 2) * SCALE_XY;
-            const posY = -(pixelData.y - imageHeight / 2) * SCALE_XY;
-            
-            const depthFactor = 1 - pixelData.brightness;
-            const posZ = (Math.random() - 0.5) * DEPTH_RANGE * depthFactor;
-            
-            dummy.position.set(posX, posY, posZ);
-            dummy.updateMatrix();
-            particleCloud.setMatrixAt(i, dummy.matrix);
-            particleCloud.setColorAt(i, new THREE.Color(pixelData.color.r, pixelData.color.g, pixelData.color.b));
-        }
-        particleCloud.instanceMatrix.needsUpdate = true;
-        particleCloud.instanceColor.needsUpdate = true;
-        particleCloud.castShadow = true; 
-        
-        mainObjectGroup.add(particleCloud); // Thêm vào group
-        
-        resetRotation();
-        animate();
-    });
-
-    // Mouse controls (xoay group)
-    canvas.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        previousMousePosition.x = e.clientX;
-        previousMousePosition.y = e.clientY;
-    });
-    canvas.addEventListener('mousemove', (e) => {
-        if (!isDragging || !mainObjectGroup) return;
-        const deltaX = e.clientX - previousMousePosition.x;
-        const deltaY = e.clientY - previousMousePosition.y;
-        const rotationQuaternionY = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0, 1, 0),
-            deltaX * rotationSpeed
-        );
-        const rotationQuaternionX = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(1, 0, 0),
-            deltaY * rotationSpeed
-        );
-        mainObjectGroup.quaternion.multiplyQuaternions(rotationQuaternionY, mainObjectGroup.quaternion);
-        mainObjectGroup.quaternion.multiplyQuaternions(rotationQuaternionX, mainObjectGroup.quaternion);
-        previousMousePosition.x = e.clientX;
-        previousMousePosition.y = e.clientY;
-    });
-    canvas.addEventListener('mouseup', () => { isDragging = false; });
-    canvas.addEventListener('mouseleave', () => { isDragging = false; });
-
-    // Game logic
-    function resetRotation() {
-        if (!mainObjectGroup) return;
-        mainObjectGroup.quaternion.setFromEuler(
-            new THREE.Euler(
-                Math.random() * Math.PI * 2,
-                Math.random() * Math.PI * 2,
-                Math.random() * Math.PI * 2
-            )
-        );
-    }
-
-    // Loop
-    function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-    }
-
-    // Responsive
-    function handleResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-    window.addEventListener('resize', handleResize);
+        renderer.setClearColor(0x2a2a2a);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFShadowMap;
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
+        directionalLight.position.set(50, 100, 200);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 4096;
+        directionalLight.shadow.mapSize.height = 4096;
+        
+        // --- THAY ĐỔI THEO YÊU CẦU 2: Mở rộng vùng camera của bóng ---
+        // Vì SCALE_XY tăng từ 2 lên 3 (tăng 1.5 lần),
+        // chúng ta cũng cần tăng vùng chứa bóng lên 1.5 lần
+        const shadowBoundsX = 2025; // Kích thước cũ: 1350 (1350 * 1.5)
+        const shadowBoundsY = 1350;  // Kích thước cũ: 900 (900 * 1.5)
 
-    // --- (Code xử lý Menu HTML/JS giữ nguyên) ---
-    const closeMenuBtn = document.getElementById('close-menu-btn');
-    const characterMenu = document.getElementById('character-menu');
-    const detailPanel = document.getElementById('detail-panel');
-    const closePanelBtn = document.getElementById('close-panel-btn'); // Vẫn không tìm thấy nút này trong HTML
+        directionalLight.shadow.camera.left = -shadowBoundsX;
+        directionalLight.shadow.camera.right = shadowBoundsX;
+        directionalLight.shadow.camera.top = shadowBoundsY;
+        directionalLight.shadow.camera.bottom = -shadowBoundsY;
 
-    closeMenuBtn.addEventListener('click', () => {
-        characterMenu.classList.add('-translate-x-full');
-    });
-    if (closePanelBtn) { 
-        closePanelBtn.addEventListener('click', () => {
-            detailPanel.classList.add('hidden');
-            detailPanel.classList.remove('flex');
+        directionalLight.shadow.camera.far = 1000;
+        directionalLight.shadow.camera.near = 0.1;
+        directionalLight.shadow.bias = -0.0001;
+        scene.add(directionalLight);
+
+        // Plane (nền)
+        const bgTextureLoader = new THREE.TextureLoader();
+        const backgroundTexture = bgTextureLoader.load('Đảng Cộng Sản Việt Nam.png');
+        const planeGeometry = new THREE.PlaneGeometry(2700, 1800);
+        const planeMaterial = new THREE.MeshStandardMaterial({ 
+            map: backgroundTexture,
+            roughness: 0.8
         });
-    }
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.position.z = -500;
+        plane.receiveShadow = true;
+        scene.add(plane);
 
-    // Script tự động highlight và scroll menu
-window.addEventListener('load', () => {  // Chờ toàn bộ page load (images, etc.)
-    const menu = document.getElementById('character-menu');
-    if (!menu) {
-        console.error('Menu không tồn tại');
-        return;
-    }
+        // Variables
+        let particleCloud, particleCount, mainObjectGroup;
+        let isDragging = false;
+        const previousMousePosition = { x: 0, y: 0 };
+        const rotationSpeed = 0.005;
 
-    // Mở menu nếu đang ẩn
-    menu.classList.remove('-translate-x-full');
+        // Tạo Group chính
+        mainObjectGroup = new THREE.Group();
+        scene.add(mainObjectGroup);
 
-    // Lấy tên file hiện tại (capitalize chữ cái đầu để khớp id)
-    let currentFile = window.location.pathname.split('/').pop().replace('.html', '');
-    currentFile = currentFile.charAt(0).toUpperCase() + currentFile.slice(1);
-    console.log(`Current file detected: ${currentFile}`);
-
-    // Tìm scroll container
-    const scrollContainer = menu.querySelector('.flex-1.overflow-y-auto');
-    if (!scrollContainer) {
-        console.error('Scroll container không tồn tại');
-        return;
-    }
-
-    // Tìm tất cả item
-    const items = document.querySelectorAll('.character-item');
-    let selectedItem = null;
-
-    items.forEach(item => {
-        // Xóa highlight cũ
-        item.classList.remove('bg-white/20', 'opacity-100', 'border-2', 'border-blue-400');
-        item.classList.add('opacity-60');
-
-        // Áp dụng highlight nếu khớp
-        if (item.id === `item-${currentFile}`) {
-            item.classList.add('bg-white/20', 'opacity-100', 'border-2', 'border-blue-400');
-            item.classList.remove('opacity-60');
-            selectedItem = item;
-            console.log(`Highlighted item: ${item.id}`);
+        // --- THAY ĐỔI THEO YÊU CẦU 1: Làm ngôi sao nhỏ và đẹp hơn ---
+        const starShape = new THREE.Shape();
+        const outerRadius = 150; // Kích thước cũ: 300
+        const innerRadius = 75;  // Kích thước cũ: 150
+        
+        starShape.moveTo(outerRadius, 0);
+        for (let i = 1; i <= 5; i++) {
+            let innerAngle = (i * 2 * Math.PI / 5) - (Math.PI / 5);
+            starShape.lineTo(innerRadius * Math.cos(innerAngle), innerRadius * Math.sin(innerAngle));
+            let outerAngle = i * 2 * Math.PI / 5;
+            starShape.lineTo(outerRadius * Math.cos(outerAngle), outerRadius * Math.sin(outerAngle));
         }
-    });
-
-    if (selectedItem) {
-        // Function để scroll, với retry nếu container chưa ready
-        const scrollToItem = () => {
-            if (scrollContainer.clientHeight === 0) {
-                // Container chưa render, retry sau 200ms
-                setTimeout(scrollToItem, 200);
-                console.log('Retry scroll: Container chưa ready');
-                return;
+        
+        // Thêm "bevel" (cạnh vát) để ngôi sao đẹp hơn
+        const extrudeSettings = { 
+            depth: 20, // Cho mỏng lại, Kích thước cũ: 50
+            bevelEnabled: true,
+            bevelThickness: 5,
+            bevelSize: 4,
+            bevelSegments: 2
+        }; 
+        const starGeometry = new THREE.ExtrudeGeometry(starShape, extrudeSettings);
+        starGeometry.center(); 
+        
+        const starMaterial = new THREE.MeshStandardMaterial({
+            color: 0xFFFF00, 
+            roughness: 0.4,
+            metalness: 0.2
+        });
+        
+        const starMesh = new THREE.Mesh(starGeometry, starMaterial);
+        starMesh.castShadow = false;
+        starMesh.receiveShadow = false; 
+        mainObjectGroup.add(starMesh);
+        
+        // Load ảnh và tạo đám mây hạt (vật thể tàng hình)
+        const loader = new THREE.TextureLoader();
+        loader.load(imageUrl, (texture) => {
+            const image = texture.image;
+            const imageWidth = image.width;
+            const imageHeight = image.height;
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d', { willReadFrequently: true });
+            canvas.width = imageWidth;
+            canvas.height = imageHeight;
+            context.drawImage(image, 0, 0);
+            const imageData = context.getImageData(0, 0, imageWidth, imageHeight).data;
+            const validPixels = [];
+            for (let i = 0; i < imageData.length; i += 4) {
+                const brightness = (imageData[i] + imageData[i+1] + imageData[i+2]) / (255 * 3);
+                if (brightness < BRIGHTNESS_THRESHOLD && Math.random() < DENSITY) {
+                    validPixels.push({
+                        x: (i / 4) % imageWidth,
+                        y: Math.floor((i / 4) / imageWidth),
+                        color: { r: imageData[i]/255, g: imageData[i+1]/255, b: imageData[i+2]/255 },
+                        brightness: brightness
+                    });
+                }
             }
-
-            const itemOffset = selectedItem.offsetTop;
-            const itemHeight = selectedItem.clientHeight;
-            const containerHeight = scrollContainer.clientHeight;
-            const scrollPosition = itemOffset - (containerHeight / 2) + (itemHeight / 2);
-
-            scrollContainer.scrollTo({
-                top: scrollPosition,
-                behavior: 'smooth'  // Scroll mượt
+            particleCount = validPixels.length;
+            console.log(`Tạo đám mây với ${particleCount} hạt`);
+            
+            const sphereGeometry = new THREE.SphereGeometry(PARTICLE_RADIUS, 8, 8);
+            const material = new THREE.MeshStandardMaterial({
+                vertexColors: true,
+                roughness: 0.5,
+                metalness: 0.1
             });
-            console.log(`Scrolled to position: ${scrollPosition}`);
-        };
+            
+            // Làm vật liệu tàng hình (vẫn đổ bóng)
+            material.colorWrite = false;
 
-        // Delay ban đầu 500ms để chờ render
-        setTimeout(scrollToItem, 500);
-    } else {
-        console.error(`Không tìm thấy item khớp với ${currentFile}`);
-    }
-});
-</script>
+            particleCloud = new THREE.InstancedMesh(sphereGeometry, material, particleCount);
+            const dummy = new THREE.Object3D();
+            const colors = new Float32Array(particleCount * 3);
+            for (let i = 0; i < particleCount; i++) {
+                const pixelData = validPixels[i];
+                
+                // Dòng này sử dụng hằng số SCALE_XY (đã tăng lên 3)
+                const posX = (pixelData.x - imageWidth / 2) * SCALE_XY;
+                const posY = -(pixelData.y - imageHeight / 2) * SCALE_XY;
+                
+                const depthFactor = 1 - pixelData.brightness;
+                const posZ = (Math.random() - 0.5) * DEPTH_RANGE * depthFactor;
+                
+                dummy.position.set(posX, posY, posZ);
+                dummy.updateMatrix();
+                particleCloud.setMatrixAt(i, dummy.matrix);
+                particleCloud.setColorAt(i, new THREE.Color(pixelData.color.r, pixelData.color.g, pixelData.color.b));
+            }
+            particleCloud.instanceMatrix.needsUpdate = true;
+            particleCloud.instanceColor.needsUpdate = true;
+            particleCloud.castShadow = true; 
+            
+            mainObjectGroup.add(particleCloud); // Thêm vào group
+            
+            resetRotation();
+            animate();
+        });
 
-    <!-- Thêm script menu.js ở đây (giả sử file menu.js nằm cùng thư mục) -->
+        // Mouse controls (xoay group)
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            previousMousePosition.x = e.clientX;
+            previousMousePosition.y = e.clientY;
+        });
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDragging || !mainObjectGroup) return;
+            const deltaX = e.clientX - previousMousePosition.x;
+            const deltaY = e.clientY - previousMousePosition.y;
+            const rotationQuaternionY = new THREE.Quaternion().setFromAxisAngle(
+                new THREE.Vector3(0, 1, 0),
+                deltaX * rotationSpeed
+            );
+            const rotationQuaternionX = new THREE.Quaternion().setFromAxisAngle(
+                new THREE.Vector3(1, 0, 0),
+                deltaY * rotationSpeed
+            );
+            mainObjectGroup.quaternion.multiplyQuaternions(rotationQuaternionY, mainObjectGroup.quaternion);
+            mainObjectGroup.quaternion.multiplyQuaternions(rotationQuaternionX, mainObjectGroup.quaternion);
+            previousMousePosition.x = e.clientX;
+            previousMousePosition.y = e.clientY;
+        });
+        canvas.addEventListener('mouseup', () => { isDragging = false; });
+        canvas.addEventListener('mouseleave', () => { isDragging = false; });
+
+        // Game logic
+        function resetRotation() {
+            if (!mainObjectGroup) return;
+            mainObjectGroup.quaternion.setFromEuler(
+                new THREE.Euler(
+                    Math.random() * Math.PI * 2,
+                    Math.random() * Math.PI * 2,
+                    Math.random() * Math.PI * 2
+                )
+            );
+        }
+
+        // Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        // Responsive
+        function handleResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        window.addEventListener('resize', handleResize);
+
+        // --- Bỏ phần script cũ highlight/scroll, merge vào menu.js ---
+    </script>
+
+    <!-- Thêm script menu.js -->
     <script src="menu.js"></script>
 
 </body>
